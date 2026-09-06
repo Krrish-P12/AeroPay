@@ -1,9 +1,3 @@
-/* Wordmark font — add this near the top of your index.html <head>,
-   or move it into your global stylesheet:
-   <link rel="preconnect" href="https://fonts.googleapis.com">
-   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@1&display=swap" rel="stylesheet">
-*/
-
 :root {
     --bg-main: #000000;
     --blob-1: #00c3ff;
@@ -66,7 +60,7 @@
     z-index: 1;
 }
 
-/* ---------- camera box (former placeholder card) ---------- */
+
 .aeropay-card {
     position: absolute;
     left: 14.68cqw;
@@ -86,7 +80,6 @@
     z-index: 1;
 }
 
-/* ---------- tab wrapper ---------- */
 .tab-wrapper {
     position: absolute;
     top: 70px;
@@ -99,7 +92,6 @@
     z-index: 2;
 }
 
-/* ---------- toggle switch ---------- */
 .toggle-container {
     --toggle-scale: 0.8;
     /* Change this to 1.2, 0.8, etc., to resize the toggle */
@@ -122,7 +114,6 @@
     /* Overlap slightly to prevent hairline gaps */
 }
 
-/* Tab inverted corners */
 .toggle-container::before,
 .toggle-container::after {
     content: "";
@@ -144,7 +135,7 @@
     background: radial-gradient(circle at 100% 0, transparent 23.5px, rgb(255, 255, 255) 24px);
 }
 
-/* ---------- main content box ---------- */
+
 .main-content-box {
     width: 100%;
     flex: 1;
@@ -179,7 +170,7 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
-/* ---------- payment form ---------- */
+
 .pay-form {
     display: flex;
     flex-direction: column;
@@ -194,7 +185,7 @@
 .pay-form.has-qr {
     padding-top: 20px;
     gap: 15px;
-    /* Keeping padding-bottom the same as .pay-form to prevent button shift */
+
 }
 
 .line-input {
@@ -230,7 +221,6 @@
     max-width: 300px;
 }
 
-/* ---------- Pay Button ---------- */
 .generate-pay-btn {
     margin-top: auto;
     /* Pushes the button to the bottom */
@@ -254,7 +244,6 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-/* ---------- QR Container ---------- */
 .qr-container {
     margin: 0;
     display: flex;

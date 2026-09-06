@@ -1,9 +1,5 @@
 import Dexie from "dexie";
 
-// ==========================================
-// 1. DATABASE SETUP (Merchant Side)
-// ==========================================
-
 const db = new Dexie("AeroPayMerchantDB");
 
 // We only index the fields we need to search by (like escrowId and nonce for replay checks)
@@ -20,9 +16,6 @@ export const clearSettlements = async () => {
   return await db.settlements.clear();
 };
 
-// ==========================================
-// 2. CRYPTO MOCK LOGIC (Review 1)
-// ==========================================
 
 const verifyServerCertificate = (certificate) => {
   const authenticServerSignature = "L8K4vL3fN2sA7wB9qE4pT1zO5vMu9+jP6Z1mH2oR8xG5cK4vL3fN2sA7wB9qE4pT1zO5vMu9+jP6Z1mH2oR8xG5cA==";
@@ -33,10 +26,6 @@ const verifyBuyerSignature = (transaction) => {
   const authenticBuyerSignature = "MEYCIQDxX91gH7c3K4vL3fN2sA7wB9qE4pT1zO5vMu9+jP6Z1mH2oR8xG5cK4vL3fN2sA7wB9qE4pT1zO5vMu9+A==";
   return transaction.signature === authenticBuyerSignature;
 };
-
-// ==========================================
-// 3. PARSING LOGIC
-// ==========================================
 
 const parseQR = (qrString) => {
   try {
@@ -86,9 +75,6 @@ const parseQR = (qrString) => {
   }
 };
 
-// ==========================================
-// 4. MASTER PIPELINE: VALIDATE & SAVE
-// ==========================================
 
 export const processScannedPayment = async (qrString) => {
   // 1. Parse QR
