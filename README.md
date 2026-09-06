@@ -1,19 +1,24 @@
-# React + Vite
+# AeroPay
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+AeroPay is a peer-to-peer payment application designed to function entirely offline. It enables secure transactions between devices without an internet connection by using cryptographically signed QR codes.
 
-Currently, two official plugins are available:
+## How It Works
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+1. **Pay**: The sender enters an amount and a recipient ID. The app generates a transaction payload containing a sequential nonce, timestamp, and a digital signature (Ed25519). This payload is encoded into a high-density QR code.
+2. **Scan**: The receiver scans the QR code. The app unpacks the payload, validates the cryptographic signatures, and performs local checks for escrow limits, expiration (60-second TTL), and replay attacks.
+3. **Settle**: Valid transactions are securely stored in a local IndexedDB ledger and flagged as pending. Once the device regains internet connectivity, the local ledger is synced with the backend for final settlement.
 
-## React Compiler
+## Tech Stack
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+- React (Vite)
+- IndexedDB (Dexie.js) for local ledger storage
+- `@yudiel/react-qr-scanner` for optical transfer
 
-Note: This will impact Vite dev & build performances.
-You can also try [the experimental native React Compiler support in plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md#rust-react-compiler) by using `compiler: true` in the plugin options instead of using the Babel plugin.
+## Development
 
-## Expanding the ESLint configuration
+Install dependencies and start the local dev server:
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+```bash
+npm install
+npm run dev
+```

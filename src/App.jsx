@@ -89,7 +89,7 @@ export default function AeroPayScreen() {
                                             const result = await processScannedPayment(data);
                                             
                                             if (result.valid) {
-                                                alert(`Success! Received $${result.payment.amount}`);
+                                                alert(`Success! Received ₹${result.payment.amount}`);
                                             } else {
                                                 alert(`Scan Failed: ${result.reason}`);
                                             }
@@ -118,7 +118,7 @@ export default function AeroPayScreen() {
                                 type="text"
                                 inputMode="decimal"
                                 className="line-input amount-input"
-                                placeholder="0.0"
+                                placeholder="₹ 0.0"
                                 value={amount}
                                 onChange={(e) => {
                                     setAmount(e.target.value);
