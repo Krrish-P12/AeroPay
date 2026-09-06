@@ -15,7 +15,7 @@ export default defineConfig({
         background_color: '#000000',
         icons: [
           {
-            src: '/favicon.svg', // Ensure you drop an SVG icon in the public folder
+            src: '/icons.svg', // Ensure you drop an SVG icon in the public folder
             sizes: '512x512',
             type: 'image/svg+xml',
             purpose: 'any maskable'

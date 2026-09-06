@@ -34,7 +34,7 @@
     background-color: var(--bg-main);
     background-image:
         radial-gradient(circle at 50% -10%, rgba(0, 195, 255, 0.20), transparent 30%, rgba(0, 3, 4, 0.25) 80%),
-        radial-gradient(circle at 10% 100%, rgba(5, 8, 7, 0.2) 0%, rgba(0, 0, 0, 0.25) 44%, rgba(0, 0, 0, 0.5) 100%);
+        radial-gradient(circle at 10% 100%, rgba(5, 118, 138, 0.973) 0%, rgba(28, 214, 171, 0.25) 44%, rgba(0, 0, 0, 0.5) 100%);
     background-attachment: fixed;
     z-index: 1;
 }
@@ -110,6 +110,8 @@
     transform: scale(var(--toggle-scale));
     transform-origin: bottom center;
     display: flex;
+    flex-shrink: 0;
+    /* Prevents toggle from shrinking/shifting when content grows */
     align-items: center;
     background: rgb(255, 255, 255);
     border-radius: 24px 24px 0 0;
@@ -146,6 +148,11 @@
 .main-content-box {
     width: 100%;
     flex: 1;
+    min-height: 0;
+    /* Allows the box to stay within screen limits */
+    overflow-y: auto;
+    /* Enables scrolling if QR code + buttons are too tall */
+    overflow-x: hidden;
     background: rgb(255, 255, 255);
     border-radius: 24px;
     /* Matches toggle radius */
@@ -178,11 +185,16 @@
     flex-direction: column;
     align-items: center;
     padding-top: 60px;
-    /* Space for the overlapping toggle */
     gap: 30px;
     height: 100%;
     box-sizing: border-box;
     padding-bottom: 24px;
+}
+
+.pay-form.has-qr {
+    padding-top: 20px;
+    gap: 15px;
+    /* Keeping padding-bottom the same as .pay-form to prevent button shift */
 }
 
 .line-input {
@@ -244,12 +256,13 @@
 
 /* ---------- QR Container ---------- */
 .qr-container {
-    background: #ffffff;
-    padding: 16px;
-    border-radius: 16px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-    margin: 10px 0;
+    margin: 0;
     display: flex;
     justify-content: center;
     align-items: center;
+    width: 70%;
+    max-width: 250px;
+    aspect-ratio: 1 / 1;
+    border-radius: 0px;
+    overflow: hidden;
 }
