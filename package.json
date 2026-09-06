@@ -10,8 +10,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "dexie": "^4.4.5",
     "react": "^19.2.8",
-    "react-dom": "^19.2.8"
+    "react-dom": "^19.2.8",
+    "react-qr-code": "^2.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.29.7",

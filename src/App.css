@@ -241,3 +241,15 @@
     transform: scale(0.96);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
+
+/* ---------- QR Container ---------- */
+.qr-container {
+    background: #ffffff;
+    padding: 16px;
+    border-radius: 16px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    margin: 10px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
