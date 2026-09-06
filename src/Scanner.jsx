@@ -39,10 +39,16 @@ export default function QRScanner({ onScan }) {
                     alignItems: 'center',
                     borderRadius: '16px'
                 }}>
-                    <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                    <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                        <polyline points="20 6 9 17 4 12"></polyline>
                     </svg>
+                    <p style={{
+                        fontFamily: '"Instrument Serif", serif',
+                        fontStyle: 'italic',
+                        fontSize: '28px',
+                        color: '#000',
+                        margin: '16px 0 0 0'
+                    }}>Payment Received</p>
                 </div>
             )}
         </div>

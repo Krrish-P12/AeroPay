@@ -28,7 +28,7 @@
     background-color: var(--bg-main);
     background-image:
         radial-gradient(circle at 50% -10%, rgba(0, 195, 255, 0.20), transparent 30%, rgba(0, 3, 4, 0.25) 80%),
-        radial-gradient(circle at 10% 100%, rgba(5, 118, 138, 0.973) 0%, rgba(28, 214, 171, 0.25) 44%, rgba(0, 0, 0, 0.5) 100%);
+        radial-gradient(circle at 10% 100%, rgba(5, 118, 138, 0.579) 0%, rgba(28, 214, 171, 0.25) 44%, rgba(0, 0, 0, 0.5) 100%);
     background-attachment: fixed;
     z-index: 1;
 }

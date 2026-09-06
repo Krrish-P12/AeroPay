@@ -88,9 +88,7 @@ export default function AeroPayScreen() {
                                             setScanResult(data);
                                             const result = await processScannedPayment(data);
                                             
-                                            if (result.valid) {
-                                                alert(`Success! Received ₹${result.payment.amount}`);
-                                            } else {
+                                            if (!result.valid) {
                                                 alert(`Scan Failed: ${result.reason}`);
                                             }
                                             
