@@ -1,0 +1,243 @@
+/* Wordmark font — add this near the top of your index.html <head>,
+   or move it into your global stylesheet:
+   <link rel="preconnect" href="https://fonts.googleapis.com">
+   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@1&display=swap" rel="stylesheet">
+*/
+
+:root {
+    --bg-main: #000000;
+    --blob-1: #00c3ff;
+}
+
+.aeropay-screen {
+    position: relative;
+    width: 100vw;
+    height: 100dvh;
+    /* dynamic viewport height: correct on mobile browser chrome + PWA standalone */
+    overflow: hidden;
+    container-type: size;
+    /* children size themselves in cqw/cqh = % of THIS box */
+
+    /* PWA Native App Feel */
+    -webkit-user-select: none;
+    /* Disable text selection */
+    user-select: none;
+    -webkit-touch-callout: none;
+    /* Disable long-press context menu */
+    touch-action: manipulation;
+    /* Disable double-tap to zoom */
+
+
+    box-sizing: border-box;
+
+    /* Premium dark blue theme with radial blobs */
+    background-color: var(--bg-main);
+    background-image:
+        radial-gradient(circle at 50% -10%, rgba(0, 195, 255, 0.20), transparent 30%, rgba(0, 3, 4, 0.25) 80%),
+        radial-gradient(circle at 10% 100%, rgba(5, 8, 7, 0.2) 0%, rgba(0, 0, 0, 0.25) 44%, rgba(0, 0, 0, 0.5) 100%);
+    background-attachment: fixed;
+    z-index: 1;
+}
+
+.aeropay-screen::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    opacity: 0.04;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ---------- wordmark ---------- */
+.aeropay-logo {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    /* This perfectly centers it */
+    top: 20px;
+    margin: 0;
+    font-family: "Instrument Serif", serif;
+    font-style: italic;
+    font-size: 9.71cqw;
+    line-height: normal;
+    color: #ffffff;
+    word-break: break-word;
+    z-index: 1;
+}
+
+/* ---------- camera box (former placeholder card) ---------- */
+.aeropay-card {
+    position: absolute;
+    left: 14.68cqw;
+    /* exactly matches 60.5px / 412px */
+    top: 24cqh;
+    width: 70.14cqw;
+    /* exactly matches 289px / 412px */
+    /* Remove height to stop it from conflicting and squishing on different screens! */
+    aspect-ratio: 1 / 1;
+    background: #d9d9d9;
+    border: 1px solid #000000;
+    border-radius: 28px;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+}
+
+/* ---------- tab wrapper ---------- */
+.tab-wrapper {
+    position: absolute;
+    top: 70px;
+    left: 20px;
+    right: 20px;
+    bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 2;
+}
+
+/* ---------- toggle switch ---------- */
+.toggle-container {
+    --toggle-scale: 0.8;
+    /* Change this to 1.2, 0.8, etc., to resize the toggle */
+    position: relative;
+    height: 46px;
+    /* Exact height to calculate perfect middle */
+    box-sizing: border-box;
+    transform: scale(var(--toggle-scale));
+    transform-origin: bottom center;
+    display: flex;
+    align-items: center;
+    background: rgb(255, 255, 255);
+    border-radius: 24px 24px 0 0;
+    /* Square bottom so it sits flush */
+    padding: 0 6px;
+    z-index: 2;
+    margin-bottom: -1px;
+    /* Overlap slightly to prevent hairline gaps */
+}
+
+/* Tab inverted corners */
+.toggle-container::before,
+.toggle-container::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    /* Sit exactly at the bottom of the toggle */
+    width: 24px;
+    height: 24px;
+    pointer-events: none;
+}
+
+.toggle-container::before {
+    left: -24px;
+    background: radial-gradient(circle at 0 0, transparent 23.5px, rgb(255, 255, 255) 24px);
+}
+
+.toggle-container::after {
+    right: -24px;
+    background: radial-gradient(circle at 100% 0, transparent 23.5px, rgb(255, 255, 255) 24px);
+}
+
+/* ---------- main content box ---------- */
+.main-content-box {
+    width: 100%;
+    flex: 1;
+    background: rgb(255, 255, 255);
+    border-radius: 24px;
+    /* Matches toggle radius */
+    z-index: 1;
+}
+
+
+.toggle-btn {
+    background: transparent;
+    border: none;
+    color: rgba(0, 0, 0, 0.6);
+    padding: 8px 24px;
+    border-radius: 16px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.toggle-btn.active {
+    background: #000000;
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* ---------- payment form ---------- */
+.pay-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 60px;
+    /* Space for the overlapping toggle */
+    gap: 30px;
+    height: 100%;
+    box-sizing: border-box;
+    padding-bottom: 24px;
+}
+
+.line-input {
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.2);
+    font-family: inherit;
+    color: #000;
+    text-align: center;
+    outline: none;
+    transition: border-bottom-color 0.3s ease;
+}
+
+.line-input:focus {
+    border-bottom-color: #000;
+}
+
+.line-input::placeholder {
+    color: rgba(0, 0, 0, 0.4);
+    font-style: italic;
+}
+
+.amount-input {
+    font-size: 30px;
+    font-weight: 700;
+    width: 60%;
+    max-width: 150px;
+}
+
+.id-input {
+    font-size: 30px;
+    width: 80%;
+    max-width: 300px;
+}
+
+/* ---------- Pay Button ---------- */
+.generate-pay-btn {
+    margin-top: auto;
+    /* Pushes the button to the bottom */
+    width: 90%;
+    max-width: 150px;
+    padding: 15px;
+    background: #000000;
+    color: #ffffff;
+    border: none;
+    border-radius: 18px;
+    font-size: 20px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.generate-pay-btn:active {
+    transform: scale(0.96);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
