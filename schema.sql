@@ -31,10 +31,26 @@ CREATE TABLE IF NOT EXISTS settlements (
     synced_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
--- 4. Seed initial test accounts
+-- 4. Confirmed Authoritative Transactions Ledger
+CREATE TABLE IF NOT EXISTS confirmed_transactions (
+    id SERIAL PRIMARY KEY,
+    escrow_id VARCHAR(50) REFERENCES escrow_locks(escrow_id),
+    sender_id VARCHAR(100) REFERENCES users(id),
+    receiver_id VARCHAR(100) REFERENCES users(id),
+    amount NUMERIC(12, 2) NOT NULL,
+    nonce INT NOT NULL,
+    status VARCHAR(20) NOT NULL DEFAULT 'SETTLED', -- 'SETTLED', 'VOID', 'DISPUTED'
+    buyer_signature TEXT,
+    tx_raw_data TEXT,
+    settled_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT unique_escrow_nonce UNIQUE (escrow_id, nonce)
+);
+
+-- 5. Seed initial test accounts
 INSERT INTO users (id, pin_hash, balance) 
 VALUES 
     ('saanvi@aeropay', '1234', 5000.00),
     ('parth@aeropay', '1234', 5000.00),
     ('merchant@aeropay', '1234', 1000.00)
 ON CONFLICT (id) DO NOTHING;
+

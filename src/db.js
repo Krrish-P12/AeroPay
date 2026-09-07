@@ -2,9 +2,10 @@ import Dexie from "dexie";
 
 const db = new Dexie("AeroPayUserDB");
 
-db.version(2).stores({
-    transactions: "++id, receiverId, amount, timestamp, nonce",
-    profile: "id, upiId, linkedAt"
+db.version(3).stores({
+    transactions: "++id, receiverId, amount, timestamp, nonce, status",
+    profile: "id, upiId, linkedAt",
+    confirmed_transactions: "++id, escrowId, nonce, senderId, receiverId, amount, status, timestamp"
 });
 
 export const savePayment = async (receiverId, amount, nonce) => {
@@ -15,12 +16,28 @@ export const savePayment = async (receiverId, amount, nonce) => {
         receiverId,
         amount: negativeAmount,
         timestamp: Date.now(),
-        nonce
+        nonce,
+        status: "PENDING"
     });
 };
 
 export const getHistory = async () => {
     return await db.transactions.toArray();
+};
+
+export const updateTransactionStatus = async (nonce, status) => {
+    const records = await db.transactions.where("nonce").equals(Number(nonce)).toArray();
+    for (const r of records) {
+        await db.transactions.update(r.id, { status });
+    }
+};
+
+export const saveConfirmedTransaction = async (txRecord) => {
+    return await db.confirmed_transactions.put(txRecord);
+};
+
+export const getConfirmedTransactions = async () => {
+    return await db.confirmed_transactions.toArray();
 };
 
 export const getNextNonce = async (receiverId) => {
@@ -76,9 +93,11 @@ export const getAvailableBalance = async () => {
         }
     }
 
-    // Sent payments from AeroPayUserDB
+    // Sent payments from AeroPayUserDB (Ignore VOID / Unclaimed expired transactions)
     const sent = await getHistory();
-    const totalSent = sent.reduce((sum, tx) => sum + Math.abs(Number(tx.amount) || 0), 0);
+    const totalSent = sent
+        .filter(tx => tx.status !== 'VOID')
+        .reduce((sum, tx) => sum + Math.abs(Number(tx.amount) || 0), 0);
 
     // Received payments from AeroPayMerchantDB
     let totalReceived = 0;
