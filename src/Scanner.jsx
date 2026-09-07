@@ -1,22 +1,35 @@
 import { Scanner } from '@yudiel/react-qr-scanner';
 import { useState } from 'react';
 
-export default function QRScanner({ onScan }) {
+export default function QRScanner({ onScan, onClose }) {
     const [isSuccess, setIsSuccess] = useState(false);
+    const [isProcessing, setIsProcessing] = useState(false);
 
     return (
         <div style={{ position: 'relative', width: '100%', height: '100%' }}>
             {!isSuccess ? (
                 <Scanner
-                    onScan={(detectedCodes) => {
+                    onScan={async (detectedCodes) => {
+                        if (isProcessing) return;
+                        
                         if (detectedCodes && detectedCodes.length > 0) {
+                            setIsProcessing(true);
                             const rawString = detectedCodes[0].rawValue;
-                            setIsSuccess(true); // Trigger success UI
                             
-                            // Wait 1 second before passing data to main app
-                            setTimeout(() => {
-                                onScan(rawString);
-                            }, 1000);
+                            // Await validation from the parent
+                            const success = await onScan(rawString);
+                            
+                            if (success) {
+                                setIsSuccess(true); // Trigger success UI
+                                
+                                // Wait 1 second before closing the scanner
+                                setTimeout(() => {
+                                    if (onClose) onClose();
+                                }, 1000);
+                            } else {
+                                // If validation failed, let them scan again
+                                setIsProcessing(false);
+                            }
                         }
                     }}
                     onError={(error) => {

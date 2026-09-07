@@ -2,8 +2,9 @@ import Dexie from "dexie";
 
 const db = new Dexie("AeroPayUserDB");
 
-db.version(1).stores({
-    transactions: "++id, receiverId, amount, timestamp, nonce"
+db.version(2).stores({
+    transactions: "++id, receiverId, amount, timestamp, nonce",
+    profile: "id, upiId, linkedAt"
 });
 
 export const savePayment = async (receiverId, amount, nonce) => {
@@ -35,4 +36,12 @@ export const getNextNonce = async (receiverId) => {
     // Find the highest nonce for this receiverId
     const maxNonce = Math.max(...records.map(r => Number(r.nonce) || 0));
     return maxNonce + 1;
+};
+
+export const saveProfile = async (upiId) => {
+    await db.profile.put({ id: 1, upiId, linkedAt: Date.now() });
+};
+
+export const getProfile = async () => {
+    return await db.profile.get(1);
 };

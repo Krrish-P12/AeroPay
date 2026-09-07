@@ -1,4 +1,5 @@
 import Dexie from "dexie";
+import { getProfile } from "./db";
 
 const db = new Dexie("AeroPayMerchantDB");
 
@@ -10,6 +11,10 @@ db.version(1).stores({
 
 export const getPendingSettlements = async () => {
   return await db.settlements.where("syncStatus").equals("PENDING").toArray();
+};
+
+export const getAllSettlements = async () => {
+  return await db.settlements.toArray();
 };
 
 export const clearSettlements = async () => {
@@ -40,9 +45,9 @@ const parseQR = (qrString) => {
 
     const [txData, buyerSignature] = txParts;
     const txFields = txData.split("|");
-    if (txFields.length !== 3) throw new Error("Invalid transaction data");
+    if (txFields.length !== 4) throw new Error("Invalid transaction data");
 
-    const [amount, nonce, timestamp] = txFields;
+    const [amount, nonce, timestamp, receiverId] = txFields;
 
     // Server Certificate Block
     const certParts = serverCert.split(".");
@@ -59,6 +64,7 @@ const parseQR = (qrString) => {
         amount: Number(amount),
         nonce: Number(nonce),
         timestamp: Number(timestamp),
+        receiverId,
         raw: txData,
         signature: buyerSignature
       },
@@ -90,6 +96,15 @@ export const processScannedPayment = async (qrString) => {
   }
   if (transaction.nonce < 1) {
     return { valid: false, reason: "Invalid nonce" };
+  }
+
+  // 3. Identity Verification Check
+  const profile = await getProfile();
+  if (!profile || !profile.upiId) {
+    return { valid: false, reason: "Please link your UPI ID in settings before scanning" };
+  }
+  if (profile.upiId !== transaction.receiverId) {
+    return { valid: false, reason: `Payment was meant for ${transaction.receiverId}, not you` };
   }
 
   // 3. Escrow Limit Check

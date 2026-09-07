@@ -4,6 +4,9 @@ import { savePayment, getNextNonce } from "./db";
 import { getMockQRString } from "./qrGenerator";
 import { processScannedPayment } from "./qrParser";
 import QRScanner from "./Scanner";
+import Settings from "./Settings";
+import Menu from "./Menu";
+import History from "./History";
 import "./App.css";
 
 export default function AeroPayScreen() {
@@ -13,6 +16,7 @@ export default function AeroPayScreen() {
     const [qrData, setQrData] = useState("");
     const [scanResult, setScanResult] = useState("");
     const [isScanning, setIsScanning] = useState(false);
+    const [currentView, setCurrentView] = useState("main");
 
     const handlePay = async () => {
         if (!amount || !receiverId) {
@@ -34,11 +38,11 @@ export default function AeroPayScreen() {
 
         try {
             await savePayment(receiverId, amount, nonce);
-            
+
             // Generate the QR string
-            const generatedQrString = getMockQRString(Number(amount), nonce);
+            const generatedQrString = getMockQRString(Number(amount), nonce, receiverId);
             setQrData(generatedQrString);
-            
+
             alert("Payment saved successfully!");
             // Leaving inputs filled so the user knows what the generated QR code is for
         } catch (error) {
@@ -47,8 +51,29 @@ export default function AeroPayScreen() {
         }
     };
 
+    if (currentView === "settings") {
+        return <Settings onClose={() => setCurrentView("menu")} />;
+    }
+
+    if (currentView === "history") {
+        return <History onClose={() => setCurrentView("menu")} />;
+    }
+
+    if (currentView === "menu") {
+        return <Menu onClose={() => setCurrentView("main")} onSelect={(view) => setCurrentView(view)} />;
+    }
+
     return (
         <div className="aeropay-screen">
+            {/* Menu Icon (Hamburger) */}
+            <div className="settings-icon" onClick={() => setCurrentView("menu")}>
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </div>
+
             {/* wordmark */}
             <p className="aeropay-logo">AeroPAY</p>
 
@@ -83,26 +108,28 @@ export default function AeroPayScreen() {
                             {isScanning ? (
                                 <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
                                     <div className="qr-container">
-                                    <QRScanner 
-                                        onScan={async (data) => {
-                                            setScanResult(data);
-                                            const result = await processScannedPayment(data);
-                                            
-                                            if (!result.valid) {
-                                                alert(`Scan Failed: ${result.reason}`);
-                                            }
-                                            
-                                            setIsScanning(false);
-                                        }} 
-                                    />
+                                        <QRScanner
+                                            onScan={async (data) => {
+                                                setScanResult(data);
+                                                const result = await processScannedPayment(data);
+
+                                                if (!result.valid) {
+                                                    alert(`Scan Failed: ${result.reason}`);
+                                                    return false; // Tells the scanner to not show success UI
+                                                }
+                                                
+                                                return true; // Tells the scanner to show the green checkmark
+                                            }}
+                                            onClose={() => setIsScanning(false)}
+                                        />
                                     </div>
                                 </div>
                             ) : (
                                 <div style={{ flex: 1 }}></div>
                             )}
                             {!isScanning && (
-                                <button 
-                                    className="generate-pay-btn" 
+                                <button
+                                    className="generate-pay-btn"
                                     onClick={() => setIsScanning(true)}
                                 >
                                     Scan
@@ -135,8 +162,8 @@ export default function AeroPayScreen() {
                             />
                             {qrData && (
                                 <div className="qr-container" style={{ marginTop: '20px' }}>
-                                    <QRCode 
-                                        value={qrData} 
+                                    <QRCode
+                                        value={qrData}
                                         size={256}
                                         style={{ height: "auto", maxWidth: "100%", width: "100%" }}
                                     />

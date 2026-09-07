@@ -46,9 +46,7 @@
 /* ---------- wordmark ---------- */
 .aeropay-logo {
     position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    /* This perfectly centers it */
+    left: 20px;
     top: 20px;
     margin: 0;
     font-family: "Instrument Serif", serif;
@@ -58,6 +56,38 @@
     color: #ffffff;
     word-break: break-word;
     z-index: 1;
+}
+
+/* ---------- settings UI ---------- */
+.settings-icon {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    color: #ffffff;
+    cursor: pointer;
+    z-index: 2;
+}
+
+.settings-header {
+    position: absolute;
+    left: 20px;
+    top: 20px;
+    margin: 0;
+    font-family: "Instrument Serif", serif;
+    font-style: italic;
+    font-size: 9.71cqw;
+    line-height: normal;
+    color: #ffffff;
+    z-index: 1;
+}
+
+.back-icon {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    color: #ffffff;
+    cursor: pointer;
+    z-index: 2;
 }
 
 
@@ -206,6 +236,19 @@
 .line-input::placeholder {
     color: rgba(0, 0, 0, 0.4);
     font-style: italic;
+}
+
+.settings-input {
+    color: #ffffff !important;
+    border-bottom-color: rgba(255, 255, 255, 0.4) !important;
+}
+
+.settings-input:focus {
+    border-bottom-color: #ffffff !important;
+}
+
+.settings-input::placeholder {
+    color: rgba(255, 255, 255, 0.6) !important;
 }
 
 .amount-input {
