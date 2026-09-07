@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
 import { saveProfile, getProfile } from "./db";
+import { verifyUserPin } from "./services/escrowApi";
 
 export default function Settings({ onClose }) {
     const [upiId, setUpiId] = useState("");
     const [pin, setPin] = useState("");
     const [savedId, setSavedId] = useState("");
+    const [isVerifying, setIsVerifying] = useState(false);
 
     useEffect(() => {
         // Load the currently linked ID if it exists
@@ -20,15 +22,24 @@ export default function Settings({ onClose }) {
             alert("Please enter a UPI ID.");
             return;
         }
+        if (!pin) {
+            alert("Please enter your PIN.");
+            return;
+        }
 
-        // Mocking the Bank API verification call
-        if (pin === "1234") {
-            await saveProfile(upiId);
-            setSavedId(upiId);
-            alert(`Verified! Your device is now securely linked to ${upiId}`);
-            setPin(""); // Clear the PIN after success
-        } else {
-            alert("Verification failed: Invalid PIN. You cannot claim this ID.");
+        try {
+            setIsVerifying(true);
+            const result = await verifyUserPin({ upiId, pin });
+            if (result.success) {
+                await saveProfile(upiId);
+                setSavedId(upiId);
+                alert(`Verified! Your device is now securely linked to ${upiId}`);
+                setPin(""); // Clear the PIN after success
+            }
+        } catch (error) {
+            alert(error.message || "Verification failed: Invalid credentials.");
+        } finally {
+            setIsVerifying(false);
         }
     };
 
@@ -75,8 +86,10 @@ export default function Settings({ onClose }) {
                                 <button
                                     className="generate-pay-btn"
                                     onClick={handleVerify}
+                                    disabled={isVerifying}
+                                    style={{ cursor: isVerifying ? 'not-allowed' : 'pointer', opacity: isVerifying ? 0.7 : 1 }}
                                 >
-                                    Verify & Link
+                                    {isVerifying ? "Verifying..." : "Verify & Link"}
                                 </button>
                             </>
                         )}

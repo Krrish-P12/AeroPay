@@ -1,6 +1,6 @@
 import { useState } from "react";
 import QRCode from "react-qr-code";
-import { savePayment, getNextNonce, getProfile } from "./db";
+import { savePayment, getNextNonce, getProfile, getAvailableBalance } from "./db";
 import { getMockQRString } from "./qrGenerator";
 import { processScannedPayment } from "./qrParser";
 import QRScanner from "./Scanner";
@@ -30,6 +30,19 @@ export default function AeroPayScreen() {
             alert("Please enter a valid positive number for the amount.");
             return;
         }
+
+        const profile = await getProfile();
+        if (!profile?.escrowId) {
+            alert("Please lock an amount in 'Lock Amount' before making payments.");
+            return;
+        }
+
+        const availableBalance = await getAvailableBalance();
+        if (numAmount > availableBalance) {
+            alert(`Insufficient balance! Your available balance is ₹${availableBalance}.`);
+            return;
+        }
+
         if (numAmount > 500) {
             alert("Maximum payment amount is 500 at a time.");
             return;
@@ -40,8 +53,6 @@ export default function AeroPayScreen() {
         try {
             await savePayment(receiverId, amount, nonce);
 
-            // Fetch profile for senderId and dynamic escrow credentials
-            const profile = await getProfile();
             const senderId = profile?.upiId || "";
 
             // Generate the QR string

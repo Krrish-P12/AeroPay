@@ -1,12 +1,17 @@
 import { useState, useEffect } from "react";
-import { getHistory } from "./db";
+import { getHistory, getAvailableBalance } from "./db";
 import { getAllSettlements } from "./qrParser";
 
 export default function History({ onClose }) {
     const [transactions, setTransactions] = useState([]);
+    const [balance, setBalance] = useState(0);
 
     useEffect(() => {
         async function fetchData() {
+            // Fetch live balance (locked escrow - total sent + total received)
+            const liveBalance = await getAvailableBalance();
+            setBalance(liveBalance);
+
             // Fetch sent payments
             const sent = await getHistory(); // From AeroPayUserDB
             // Fetch received payments
@@ -64,7 +69,7 @@ export default function History({ onClose }) {
                 {/* Top Part: Balance */}
                 <div style={{ textAlign: 'center', marginBottom: '20px', flexShrink: 0 }}>
                     <p style={{ margin: 0, color: 'rgba(255,255,255,0.7)', fontSize: '18px' }}>Balance</p>
-                    <p style={{ margin: 7, color: '#fff', fontSize: '28px', fontFamily: '"Instrument Serif", serif', fontWeight: 'normal' }}>₹2000</p>
+                    <p style={{ margin: 7, color: '#fff', fontSize: '28px', fontFamily: '"Instrument Serif", serif', fontWeight: 'normal' }}>₹{balance ?? 0}</p>
                 </div>
 
                 {/* Header (Fixed above the scroll area) */}
