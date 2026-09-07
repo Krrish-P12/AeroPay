@@ -1,12 +1,13 @@
 import { useState } from "react";
 import QRCode from "react-qr-code";
-import { savePayment, getNextNonce } from "./db";
+import { savePayment, getNextNonce, getProfile } from "./db";
 import { getMockQRString } from "./qrGenerator";
 import { processScannedPayment } from "./qrParser";
 import QRScanner from "./Scanner";
 import Settings from "./Settings";
 import Menu from "./Menu";
 import History from "./History";
+import LockAmount from "./LockAmount";
 import "./App.css";
 
 export default function AeroPayScreen() {
@@ -39,8 +40,18 @@ export default function AeroPayScreen() {
         try {
             await savePayment(receiverId, amount, nonce);
 
+            // Fetch profile for senderId and dynamic escrow credentials
+            const profile = await getProfile();
+            const senderId = profile?.upiId || "";
+
             // Generate the QR string
-            const generatedQrString = getMockQRString(Number(amount), nonce, receiverId);
+            const generatedQrString = getMockQRString(
+                Number(amount),
+                nonce,
+                receiverId,
+                senderId,
+                profile
+            );
             setQrData(generatedQrString);
 
             alert("Payment saved successfully!");
@@ -53,6 +64,10 @@ export default function AeroPayScreen() {
 
     if (currentView === "settings") {
         return <Settings onClose={() => setCurrentView("menu")} />;
+    }
+
+    if (currentView === "lock_amount") {
+        return <LockAmount onClose={() => setCurrentView("menu")} />;
     }
 
     if (currentView === "history") {

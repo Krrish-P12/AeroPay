@@ -45,3 +45,16 @@ export const saveProfile = async (upiId) => {
 export const getProfile = async () => {
     return await db.profile.get(1);
 };
+
+export const saveEscrowLock = async (escrowData) => {
+    const existing = (await db.profile.get(1)) || { id: 1 };
+    await db.profile.put({
+        ...existing,
+        ...escrowData,
+        lockedAt: Date.now()
+    });
+};
+
+export const getEscrowLock = async () => {
+    return await db.profile.get(1);
+};

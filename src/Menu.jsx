@@ -29,6 +29,17 @@ export default function Menu({ onClose, onSelect }) {
                 >
                     Balance & History
                 </button>
+
+                {/* This divider now has no horizontal padding, so it stretches 100% across the screen */}
+                <div style={{ height: '1px', background: 'rgba(255,255,255,0.2)', width: '100%', margin: '5px 0' }}></div>
+
+                <button
+                    onClick={() => onSelect("lock_amount")}
+                    /* You can change the font size by modifying fontSize: '23px' */
+                    style={{ background: 'transparent', border: 'none', color: '#fff', fontSize: '23px', fontFamily: '"Instrument Serif", serif', fontStyle: 'italic', textAlign: 'left', padding: '15px 20px', cursor: 'pointer', outline: 'none', width: '100%' }}
+                >
+                    Lock Amount
+                </button>
             </div>
         </div>
     );

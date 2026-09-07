@@ -45,9 +45,9 @@ const parseQR = (qrString) => {
 
     const [txData, buyerSignature] = txParts;
     const txFields = txData.split("|");
-    if (txFields.length !== 4) throw new Error("Invalid transaction data");
+    if (txFields.length < 4) throw new Error("Invalid transaction data");
 
-    const [amount, nonce, timestamp, receiverId] = txFields;
+    const [amount, nonce, timestamp, receiverId, senderId] = txFields;
 
     // Server Certificate Block
     const certParts = serverCert.split(".");
@@ -65,6 +65,7 @@ const parseQR = (qrString) => {
         nonce: Number(nonce),
         timestamp: Number(timestamp),
         receiverId,
+        senderId: senderId || escrowId,
         raw: txData,
         signature: buyerSignature
       },
@@ -145,6 +146,7 @@ export const processScannedPayment = async (qrString) => {
   await db.settlements.add({
     // --- UI & Search Fields ---
     escrowId: certificate.escrowId,
+    senderId: transaction.senderId || certificate.escrowId,
     amount: finalAmount,
     nonce: transaction.nonce,
     scannedAtTimestamp: Date.now(),

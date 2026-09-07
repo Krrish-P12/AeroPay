@@ -38,7 +38,7 @@ export default function History({ onClose }) {
                     id: `recv_${tx.id}`,
                     date: `${dd}-${mm}-${yyyy}`,
                     timeVal: tx.scannedAtTimestamp,
-                    name: tx.escrowId,
+                    name: tx.senderId || tx.escrowId,
                     amount: `+${tx.amount}`,
                     type: 'received'
                 };
